@@ -1,0 +1,12 @@
+FROM node:16
+
+ARG MODE
+ENV MODE=${MODE}
+ADD . $MODE
+WORKDIR /app
+
+COPY ./src ./
+RUN npm install
+
+EXPOSE 3001
+ENTRYPOINT npm run $MODE
