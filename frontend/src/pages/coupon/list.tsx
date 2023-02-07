@@ -38,7 +38,7 @@ export default function Home() {
                   <ol>code: {coupon.code}</ol>
                   <ol>points: {coupon.points}</ol>
                   <ol>index: {coupon.index}</ol>
-                  <ol>used: {coupon.used}</ol>
+                  <ol>used: {String(coupon.used)}</ol>
                 </li>
               );
             })}
