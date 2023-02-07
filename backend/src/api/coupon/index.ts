@@ -12,12 +12,5 @@ router.post('/check', couponController.checkCoupon);
 
 // GET Method
 router.get('/list', couponController.getCouponList);
-// router.get('/:post_index', postController.getPostByIndex);
-
-// PATCH Method
-// router.patch('/:post_index', authenticateUser, postController.patchPostContent);
-
-// DELETE Method
-// router.delete('/:post_index', authenticateUser, postController.deletePost);
 
 export default router;
