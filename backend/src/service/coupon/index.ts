@@ -14,26 +14,28 @@ interface ICoupon {
   used: boolean;
   created_at?: Date;
 }
-const coupon_list: ICoupon[] = [];
 
 export const publishCoupon = async (
   campaign: string,
   points: string,
-  index: number,
+  num: number,
 ) => {
-  const created_at = getCurrentDate();
-  const code = await createCoupon(campaign, String(index), created_at);
-  console.log(code);
-  const coupon = new Coupon({
-    code: code,
-    campaign: campaign,
-    index: index,
-    points: Number(points),
-    created_at: created_at,
-  });
-  await coupon.save();
-  if (coupon) {
-    return coupon;
+  const coupon_list: ICoupon[] = [];
+  for (let index = 0; index < num; index++) {
+    const created_at = getCurrentDate();
+    const code = await createCoupon(campaign, index, created_at);
+    const coupon = new Coupon({
+      code: code,
+      campaign: campaign,
+      index: index,
+      points: Number(points),
+      created_at: created_at,
+    });
+    await coupon.save();
+    coupon_list.push(coupon);
+  }
+  if (coupon_list) {
+    return coupon_list;
   }
 };
 

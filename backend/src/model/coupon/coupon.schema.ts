@@ -3,7 +3,7 @@ import { ISchemaCoupon } from './coupon.types';
 import { getCurrentDate } from '../../lib/util';
 
 const CouponSchema: Schema = new Schema({
-  code: { type: String, required: true, unique: true },
+  code: { type: String, required: true },
   campaign: { type: String, required: true },
   index: { type: Number, required: true },
   points: { type: Number, required: true },

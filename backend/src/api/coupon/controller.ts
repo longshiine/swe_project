@@ -3,9 +3,9 @@ import STATUS_CODE from '../../lib/statusCode';
 import * as CouponService from '../../service/coupon';
 
 export const registerCoupon = async (ctx: Koa.DefaultContext) => {
-  const { campaign, points, index } = ctx.request.body;
+  const { campaign, points, num } = ctx.request.body;
   try {
-    const coupon = await CouponService.publishCoupon(campaign, points, index);
+    const coupon = await CouponService.publishCoupon(campaign, points, num);
     ctx.body = {
       success: true,
       status: STATUS_CODE.SUCCESS,

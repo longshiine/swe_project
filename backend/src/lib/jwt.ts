@@ -22,7 +22,7 @@ export const verifyToken = async (token: string) => {
 // Coupon using JWT
 export const createCoupon = async (
   campaign: string,
-  index: string,
+  index: number,
   created_at: Date,
 ) => {
   const code = await jwt.sign(
