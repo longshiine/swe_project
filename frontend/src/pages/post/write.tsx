@@ -18,6 +18,9 @@ export default function Post() {
     if (result) {
       alert("글이 작성되었습니다.");
       router.push("/mypage");
+    } else {
+      alert("글 작성에 실패하였습니다. (포인트 부족)");
+      return;
     }
   };
 

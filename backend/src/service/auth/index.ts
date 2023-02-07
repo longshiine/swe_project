@@ -93,6 +93,17 @@ export const updateUserPoints = async (id: string, points: number) => {
   });
 };
 
+export const updateUserPointsWritePost = async (id: string) => {
+  const user = await User.findOneAndUpdate({ id }, { $inc: { points: -10 } });
+  if (user) {
+    return user;
+  }
+  throwErrorMessage({
+    statusCode: STATUS_CODE.SERVER_ERROR,
+    message: ERROR.NOT_UPDATE_USER,
+  });
+};
+
 export const deleteUserInfo = async (id: string) => {
   const user = await User.findOne({ id });
   if (user) {
