@@ -1,6 +1,7 @@
 import Koa from 'koa';
 import STATUS_CODE from '../../lib/statusCode';
 import * as AuthService from '../../service/auth';
+import { checkCouponByCode, updateCoupon } from '../../service/coupon';
 import { createToken } from '../../lib/jwt';
 
 export const getToken = async (ctx: Koa.DefaultContext) => {
@@ -18,7 +19,8 @@ export const getToken = async (ctx: Koa.DefaultContext) => {
 };
 
 export const signup = async (ctx: Koa.DefaultContext) => {
-  const { id, password, name, gender, email } = ctx.request.body;
+  const { id, password, name, gender, email, referrer_id, coupon_code } =
+    ctx.request.body;
   try {
     const alreadyExistUser = await AuthService.findRedundantID(id);
     if (alreadyExistUser) {
@@ -29,13 +31,29 @@ export const signup = async (ctx: Koa.DefaultContext) => {
       };
       return;
     }
-    const user = await AuthService.createUser({
+    let user = await AuthService.createUser({
       id,
       password,
       name,
       gender,
       email,
     });
+    // (유효성 검증된) 쿠폰 사용처리
+    if (coupon_code) {
+      const used_coupon = await updateCoupon(coupon_code);
+      const referee = await AuthService.updateUserPoints(
+        id,
+        Number(used_coupon?.points),
+      );
+      user = referee ? referee : user;
+      // 추천인 존재하고, 자기 자신이 아닐 때
+      if (referrer_id && referrer_id != id) {
+        const referrer = await AuthService.updateUserPoints(
+          referrer_id,
+          Number(used_coupon?.points),
+        );
+      }
+    }
     const jwtToken = await createToken(user.id);
     ctx.body = {
       success: true,

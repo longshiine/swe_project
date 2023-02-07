@@ -7,12 +7,16 @@ export const postUser = async ({
   name,
   gender,
   email,
+  referrer_id,
+  coupon_code,
 }: {
   id: string;
   password: string;
   name: string;
   gender: string;
   email: string;
+  referrer_id?: string;
+  coupon_code?: string;
 }) => {
   const response = await POST("/auth/signup", {
     id,
@@ -20,6 +24,8 @@ export const postUser = async ({
     name,
     gender,
     email,
+    referrer_id,
+    coupon_code,
   });
   if (response) {
     if (response.data === null) {
@@ -30,6 +36,7 @@ export const postUser = async ({
       name: response.data.writer,
       gender: response.data.title,
       email: response.data.content,
+      points: response.data.points,
     };
     return user;
   } else {
@@ -74,6 +81,30 @@ export const getUser = async () => {
       profile_image_url: response.data.profile_image_url
         ? response.data.profile_image_url
         : "https://pertaniansehat.com/v01/wp-content/uploads/2015/08/default-placeholder.png",
+      points: response.data.points,
+    };
+    return user;
+  } else {
+    return null;
+  }
+};
+
+export const getUserById = async (id: string) => {
+  const response = await GET(`/auth/id/${id}`);
+  if (response) {
+    if (response.data === null) {
+      return null;
+    }
+    const user = {
+      id: response.data.id,
+      name: response.data.name,
+      password: response.data.password,
+      gender: response.data.gender,
+      email: response.data.email,
+      profile_image_url: response.data.profile_image_url
+        ? response.data.profile_image_url
+        : "https://pertaniansehat.com/v01/wp-content/uploads/2015/08/default-placeholder.png",
+      points: response.data.points,
     };
     return user;
   } else {

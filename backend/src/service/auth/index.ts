@@ -12,6 +12,7 @@ type IUserType = {
   name: string;
   gender: string;
   email: string;
+  points?: number;
 };
 
 export const createUser = async ({
@@ -78,6 +79,17 @@ export const updateUserProfileImage = async (id: string, img_src: string) => {
   throwErrorMessage({
     statusCode: STATUS_CODE.SERVER_ERROR,
     message: ERROR.NOT_UPLOAD_S3,
+  });
+};
+
+export const updateUserPoints = async (id: string, points: number) => {
+  const user = await User.findOneAndUpdate({ id }, { $inc: { points } });
+  if (user) {
+    return user;
+  }
+  throwErrorMessage({
+    statusCode: STATUS_CODE.SERVER_ERROR,
+    message: ERROR.NOT_UPDATE_USER,
   });
 };
 

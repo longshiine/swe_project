@@ -7,6 +7,7 @@ interface ISchemaUser extends Document {
   gender?: string;
   email?: string;
   profile_image_url?: string;
+  points: number;
   created_at?: Date;
   updated_at?: Date;
 }

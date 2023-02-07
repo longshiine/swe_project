@@ -43,10 +43,9 @@ const fetchWrap = async ({
       window.location.href = "/login";
       return null;
     } else if (error.response.status === 404) {
-      window.location.href = "/404";
+      // window.location.href = "/404";
       return null;
     } else {
-      alert("400: 잘못된 접근입니다");
       return null;
     }
   }

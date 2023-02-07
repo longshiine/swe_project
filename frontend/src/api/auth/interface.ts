@@ -4,4 +4,5 @@ export interface IUser {
   gender?: String;
   email?: String;
   profile_image_url?: String;
+  points?: Number;
 }

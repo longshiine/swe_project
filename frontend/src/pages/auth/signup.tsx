@@ -7,7 +7,8 @@ import {
   LockOutlined,
 } from "@ant-design/icons";
 import { Layout, Card, Input, Select, Button } from "antd";
-import { postUser } from "../../api/auth/auth";
+import { postUser, getUserById } from "../../api/auth/auth";
+import { checkCouponByCode } from "../../api/coupon/coupon";
 
 function Signup() {
   const router = useRouter();
@@ -17,9 +18,13 @@ function Signup() {
   const [gender, setGender] = useState("male");
   const [email, setEmail] = useState("");
   const [domain, setDomain] = useState("");
+  const [referrerId, setReferrerId] = useState("");
+  const [couponCode, setCouponCode] = useState("");
 
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [couponCheck, setCouponCheck] = useState(false);
+  const [referrerCheck, setReferrerCheck] = useState(false);
 
   const onChangePassword = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -35,6 +40,31 @@ function Signup() {
     setPasswordCheck(e.target.value);
   };
 
+  const checkCoupone = async () => {
+    const coupon = await checkCouponByCode(couponCode);
+    if (coupon) {
+      alert("사용 가능한 쿠폰입니다.");
+      setCouponCheck(true);
+      return;
+    } else {
+      alert("쿠폰이 유효하지 않습니다.");
+      setCouponCheck(false);
+      setCouponCode("");
+    }
+  };
+  const checkReferrer = async () => {
+    const referrer = await getUserById(referrerId);
+    if (referrer) {
+      alert("존재하는 사용자 입니다.");
+      setReferrerCheck(true);
+      return;
+    } else {
+      alert("존재하지 않는 사용자입니다.");
+      setReferrerCheck(false);
+      setReferrerId("");
+    }
+  };
+
   const submitHandler = async () => {
     if (id === "") {
       alert("아이디를 입력해주세요");
@@ -44,12 +74,22 @@ function Signup() {
       alert("비밀번호를 입력해주세요");
       return;
     }
+    if (couponCode !== "" && !couponCheck) {
+      alert("쿠폰을 확인해주세요");
+      return;
+    }
+    if (referrerId !== "" && !referrerCheck) {
+      alert("추천인을 확인해주세요");
+      return;
+    }
     const user = await postUser({
       id: id,
       password: password,
       name: name,
       gender: gender,
       email: `${email}@${domain}`,
+      referrer_id: referrerId,
+      coupon_code: couponCode,
     });
     if (user === null) {
       alert("이미 존재하는 아이디입니다.");
@@ -115,7 +155,7 @@ function Signup() {
             { value: "female", label: "female" },
           ]}
         />
-        <Input.Group compact style={{ marginBottom: 10 }}>
+        <Input.Group compact style={{ marginBottom: 20 }}>
           <Input
             className="site-input-left"
             onChange={(e) => setEmail(e.target.value)}
@@ -144,6 +184,33 @@ function Signup() {
             placeholder="domain.com"
           />
         </Input.Group>
+        <div style={{ fontWeight: "bold", marginBottom: 10 }}>
+          Coupon & Referrer (Optional)
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Input
+            placeholder="쿠폰 코드 (선택)"
+            value={couponCode}
+            disabled={couponCheck}
+            onChange={(e) => setCouponCode(e.target.value)}
+            style={{ width: "70%", marginBottom: 10, marginRight: 5 }}
+          />
+          {couponCheck ? null : (
+            <Button onClick={() => checkCoupone()}>확인</Button>
+          )}
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Input
+            placeholder="추천인 (선택)"
+            value={referrerId}
+            disabled={referrerCheck}
+            onChange={(e) => setReferrerId(e.target.value)}
+            style={{ width: "70%", marginBottom: 10, marginRight: 5 }}
+          />
+          {referrerCheck ? null : (
+            <Button onClick={() => checkReferrer()}>확인</Button>
+          )}
+        </div>
         {passwordError && (
           <div style={{ color: "red" }}>비밀번호가 일치하지 않습니다.</div>
         )}

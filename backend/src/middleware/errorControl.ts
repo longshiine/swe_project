@@ -13,7 +13,7 @@ const errorControl = async function (ctx: Koa.Context, next: any) {
     return await next();
   } catch (err: any) {
     const { method, url, header } = ctx.request;
-    ctx.status = parseInt(err.status, 10) || ctx.status || 500;
+    ctx.status = parseInt(err.status, 10) || ctx.status;
     const response = <IResponse>{
       success: false,
       status: ctx.status,

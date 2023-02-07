@@ -9,6 +9,7 @@ const UserSchema: Schema = new Schema({
   gender: { type: String, require: true },
   email: { type: String },
   profile_image_url: { type: String },
+  points: { type: Number, default: 0 },
   created_at: {
     type: Date,
     default: () => getCurrentDate(),

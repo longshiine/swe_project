@@ -137,6 +137,7 @@ export default function Home() {
           <p>이름: {user?.name}</p>
           <p>성별: {user?.gender}</p>
           <p>메일: {user?.email}</p>
+          <p>포인트: {String(user?.points)}</p>
         </Card>
         <h2 style={{ fontWeight: "bold", margin: 20, marginTop: 40 }}>
           게시물 관리

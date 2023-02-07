@@ -18,3 +18,29 @@ export const verifyToken = async (token: string) => {
   const decoded = await jwt.verify(token, process.env.JWT_SECRET as string);
   return decoded as jwt.JwtPayload;
 };
+
+// Coupon using JWT
+export const createCoupon = async (
+  campaign: string,
+  index: string,
+  created_at: Date,
+) => {
+  const code = await jwt.sign(
+    {
+      campaign: campaign,
+      index: index,
+      created_at: created_at,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: '30d',
+      issuer: 'bobidi',
+    },
+  );
+  return code;
+};
+
+export const verifyCoupon = async (token: string) => {
+  const decoded = await jwt.verify(token, process.env.JWT_SECRET as string);
+  return decoded as jwt.JwtPayload;
+};
